@@ -5,10 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/hooks/useAuth';
-import { Shield, Mail, Lock } from 'lucide-react';
+import { Shield, Mail, Lock, AlertCircle } from 'lucide-react';
 
 const AuthPage = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const { signIn } = useAuth();
 
   const [loginData, setLoginData] = useState({
@@ -18,9 +19,22 @@ const AuthPage = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     setIsLoading(true);
-    await signIn(loginData.email, loginData.password);
-    setIsLoading(false);
+    
+    console.log('Login attempt with:', loginData.email);
+    
+    try {
+      const result = await signIn(loginData.email, loginData.password);
+      if (result.error) {
+        setError('Erro no login. Verifique suas credenciais.');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('Erro inesperado. Tente novamente.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -40,6 +54,13 @@ const AuthPage = () => {
             <CardDescription>Entre com suas credenciais</CardDescription>
           </CardHeader>
           <CardContent>
+            {error && (
+              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-md flex items-center gap-2 text-red-400">
+                <AlertCircle className="w-4 h-4" />
+                <span className="text-sm">{error}</span>
+              </div>
+            )}
+            
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-draco-gray-300">
@@ -53,6 +74,7 @@ const AuthPage = () => {
                   onChange={(e) => setLoginData({...loginData, email: e.target.value})}
                   required
                   className="bg-draco-gray-700 border-draco-gray-600 text-white"
+                  placeholder="seu@email.com"
                 />
               </div>
               <div className="space-y-2">
@@ -67,12 +89,20 @@ const AuthPage = () => {
                   onChange={(e) => setLoginData({...loginData, password: e.target.value})}
                   required
                   className="bg-draco-gray-700 border-draco-gray-600 text-white"
+                  placeholder="Digite sua senha"
                 />
               </div>
               <Button type="submit" className="draco-button w-full" disabled={isLoading}>
                 {isLoading ? 'Entrando...' : 'Entrar'}
               </Button>
             </form>
+            
+            <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-md">
+              <p className="text-xs text-blue-400">
+                <strong>Para testes:</strong> Use um email válido e senha para fazer login.
+                Entre em contato com o administrador para obter acesso.
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -81,4 +111,3 @@ const AuthPage = () => {
 };
 
 export default AuthPage;
-

@@ -26,22 +26,27 @@ export const useAuth = () => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state changed:', event, session);
         setSession(session);
         setUser(session?.user ?? null);
         
         if (session?.user) {
           // Fetch user profile
           setTimeout(async () => {
-            const { data: profileData, error } = await supabase
-              .from('profiles')
-              .select('*')
-              .eq('id', session.user.id)
-              .single();
-            
-            if (profileData) {
-              setProfile(profileData);
-            } else if (error) {
-              console.error('Error fetching profile:', error);
+            try {
+              const { data: profileData, error } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', session.user.id)
+                .single();
+              
+              if (profileData) {
+                setProfile(profileData);
+              } else if (error) {
+                console.error('Error fetching profile:', error);
+              }
+            } catch (error) {
+              console.error('Profile fetch error:', error);
             }
             setLoading(false);
           }, 0);
@@ -54,6 +59,7 @@ export const useAuth = () => {
 
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session check:', session);
       setSession(session);
       setUser(session?.user ?? null);
       if (!session) {
@@ -64,67 +70,48 @@ export const useAuth = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, userData: { 
-    numero_placa: string; 
-    nome_completo: string; 
-    cargo: 'agente' | 'delegado' 
-  }) => {
-    try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/`,
-          data: userData
-        }
-      });
-
-      if (error) {
-        toast({
-          title: "Erro no cadastro",
-          description: error.message,
-          variant: "destructive"
-        });
-        return { error };
-      }
-
-      toast({
-        title: "Cadastro realizado",
-        description: "Verifique seu email para confirmar a conta."
-      });
-      
-      return { error: null };
-    } catch (error) {
-      console.error('Signup error:', error);
-      return { error };
-    }
-  };
-
   const signIn = async (email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      setLoading(true);
+      console.log('Attempting to sign in with:', email);
+      
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
       });
 
+      console.log('Sign in response:', { data, error });
+
       if (error) {
+        console.error('Sign in error:', error);
         toast({
           title: "Erro no login",
-          description: error.message,
+          description: error.message === "Invalid login credentials" 
+            ? "Email ou senha incorretos" 
+            : error.message,
           variant: "destructive"
         });
         return { error };
       }
 
-      toast({
-        title: "Login realizado",
-        description: "Bem-vindo ao DRACO!"
-      });
+      if (data.user) {
+        toast({
+          title: "Login realizado",
+          description: "Bem-vindo ao DRACO!"
+        });
+      }
 
       return { error: null };
     } catch (error) {
       console.error('Signin error:', error);
+      toast({
+        title: "Erro no login",
+        description: "Erro inesperado. Tente novamente.",
+        variant: "destructive"
+      });
       return { error };
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -153,7 +140,6 @@ export const useAuth = () => {
     session,
     profile,
     loading,
-    signUp,
     signIn,
     signOut,
     isAuthenticated: !!user,
