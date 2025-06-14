@@ -9,7 +9,321 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      casos: {
+        Row: {
+          agente_responsavel: string
+          created_at: string | null
+          data_abertura: string | null
+          data_fechamento: string | null
+          delegado_supervisor: string | null
+          descricao: string | null
+          id: string
+          localizacao: string | null
+          numero_inquerito: string
+          prioridade: Database["public"]["Enums"]["prioridade_type"] | null
+          status: Database["public"]["Enums"]["status_caso"] | null
+          suspeitos: Json | null
+          titulo: string
+          updated_at: string | null
+        }
+        Insert: {
+          agente_responsavel: string
+          created_at?: string | null
+          data_abertura?: string | null
+          data_fechamento?: string | null
+          delegado_supervisor?: string | null
+          descricao?: string | null
+          id?: string
+          localizacao?: string | null
+          numero_inquerito: string
+          prioridade?: Database["public"]["Enums"]["prioridade_type"] | null
+          status?: Database["public"]["Enums"]["status_caso"] | null
+          suspeitos?: Json | null
+          titulo: string
+          updated_at?: string | null
+        }
+        Update: {
+          agente_responsavel?: string
+          created_at?: string | null
+          data_abertura?: string | null
+          data_fechamento?: string | null
+          delegado_supervisor?: string | null
+          descricao?: string | null
+          id?: string
+          localizacao?: string | null
+          numero_inquerito?: string
+          prioridade?: Database["public"]["Enums"]["prioridade_type"] | null
+          status?: Database["public"]["Enums"]["status_caso"] | null
+          suspeitos?: Json | null
+          titulo?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "casos_agente_responsavel_fkey"
+            columns: ["agente_responsavel"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "casos_delegado_supervisor_fkey"
+            columns: ["delegado_supervisor"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      documentos: {
+        Row: {
+          arquivo_url: string | null
+          assinado_por: string[] | null
+          caso_id: string
+          conteudo: string | null
+          created_at: string | null
+          criado_por: string
+          id: string
+          tipo_documento: string
+          titulo: string
+        }
+        Insert: {
+          arquivo_url?: string | null
+          assinado_por?: string[] | null
+          caso_id: string
+          conteudo?: string | null
+          created_at?: string | null
+          criado_por: string
+          id?: string
+          tipo_documento: string
+          titulo: string
+        }
+        Update: {
+          arquivo_url?: string | null
+          assinado_por?: string[] | null
+          caso_id?: string
+          conteudo?: string | null
+          created_at?: string | null
+          criado_por?: string
+          id?: string
+          tipo_documento?: string
+          titulo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documentos_caso_id_fkey"
+            columns: ["caso_id"]
+            isOneToOne: false
+            referencedRelation: "casos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documentos_criado_por_fkey"
+            columns: ["criado_por"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      evidencias: {
+        Row: {
+          arquivo_nome: string | null
+          arquivo_url: string | null
+          cadeia_custodia: Json | null
+          caso_id: string
+          coletado_por: string
+          created_at: string | null
+          data_coleta: string | null
+          descricao: string
+          id: string
+          tipo_evidencia: string
+        }
+        Insert: {
+          arquivo_nome?: string | null
+          arquivo_url?: string | null
+          cadeia_custodia?: Json | null
+          caso_id: string
+          coletado_por: string
+          created_at?: string | null
+          data_coleta?: string | null
+          descricao: string
+          id?: string
+          tipo_evidencia: string
+        }
+        Update: {
+          arquivo_nome?: string | null
+          arquivo_url?: string | null
+          cadeia_custodia?: Json | null
+          caso_id?: string
+          coletado_por?: string
+          created_at?: string | null
+          data_coleta?: string | null
+          descricao?: string
+          id?: string
+          tipo_evidencia?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evidencias_caso_id_fkey"
+            columns: ["caso_id"]
+            isOneToOne: false
+            referencedRelation: "casos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evidencias_coletado_por_fkey"
+            columns: ["coletado_por"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mensagens: {
+        Row: {
+          caso_id: string | null
+          conteudo: string
+          created_at: string | null
+          destinatario_id: string | null
+          id: string
+          is_grupo: boolean | null
+          remetente_id: string
+          tipo_mensagem: string | null
+        }
+        Insert: {
+          caso_id?: string | null
+          conteudo: string
+          created_at?: string | null
+          destinatario_id?: string | null
+          id?: string
+          is_grupo?: boolean | null
+          remetente_id: string
+          tipo_mensagem?: string | null
+        }
+        Update: {
+          caso_id?: string | null
+          conteudo?: string
+          created_at?: string | null
+          destinatario_id?: string | null
+          id?: string
+          is_grupo?: boolean | null
+          remetente_id?: string
+          tipo_mensagem?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mensagens_caso_id_fkey"
+            columns: ["caso_id"]
+            isOneToOne: false
+            referencedRelation: "casos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mensagens_destinatario_id_fkey"
+            columns: ["destinatario_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mensagens_remetente_id_fkey"
+            columns: ["remetente_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      operacoes: {
+        Row: {
+          agentes_envolvidos: string[] | null
+          casos_relacionados: string[] | null
+          coordenador: string
+          created_at: string | null
+          data_fim: string | null
+          data_inicio: string | null
+          descricao: string | null
+          id: string
+          nome_operacao: string
+          status: string | null
+        }
+        Insert: {
+          agentes_envolvidos?: string[] | null
+          casos_relacionados?: string[] | null
+          coordenador: string
+          created_at?: string | null
+          data_fim?: string | null
+          data_inicio?: string | null
+          descricao?: string | null
+          id?: string
+          nome_operacao: string
+          status?: string | null
+        }
+        Update: {
+          agentes_envolvidos?: string[] | null
+          casos_relacionados?: string[] | null
+          coordenador?: string
+          created_at?: string | null
+          data_fim?: string | null
+          data_inicio?: string | null
+          descricao?: string | null
+          id?: string
+          nome_operacao?: string
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operacoes_coordenador_fkey"
+            columns: ["coordenador"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          cargo: Database["public"]["Enums"]["cargo_type"]
+          created_at: string | null
+          data_ingresso: string | null
+          email: string | null
+          id: string
+          nome_completo: string
+          numero_placa: string
+          status_ativo: boolean | null
+          telefone: string | null
+          unidade: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          cargo?: Database["public"]["Enums"]["cargo_type"]
+          created_at?: string | null
+          data_ingresso?: string | null
+          email?: string | null
+          id: string
+          nome_completo: string
+          numero_placa: string
+          status_ativo?: boolean | null
+          telefone?: string | null
+          unidade?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          cargo?: Database["public"]["Enums"]["cargo_type"]
+          created_at?: string | null
+          data_ingresso?: string | null
+          email?: string | null
+          id?: string
+          nome_completo?: string
+          numero_placa?: string
+          status_ativo?: boolean | null
+          telefone?: string | null
+          unidade?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +332,9 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      cargo_type: "agente" | "delegado"
+      prioridade_type: "baixa" | "media" | "alta" | "urgente"
+      status_caso: "ativo" | "investigacao" | "suspenso" | "fechado"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +449,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      cargo_type: ["agente", "delegado"],
+      prioridade_type: ["baixa", "media", "alta", "urgente"],
+      status_caso: ["ativo", "investigacao", "suspenso", "fechado"],
+    },
   },
 } as const
