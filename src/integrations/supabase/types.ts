@@ -235,6 +235,36 @@ export type Database = {
           },
         ]
       }
+      notificacoes: {
+        Row: {
+          created_at: string | null
+          id: string
+          lida: boolean | null
+          mensagem: string | null
+          tipo: string | null
+          titulo: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          lida?: boolean | null
+          mensagem?: string | null
+          tipo?: string | null
+          titulo: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          lida?: boolean | null
+          mensagem?: string | null
+          tipo?: string | null
+          titulo?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       operacoes: {
         Row: {
           agentes_envolvidos: string[] | null

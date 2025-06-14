@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -20,6 +19,7 @@ import {
   Upload,
   Search
 } from 'lucide-react';
+import NotificationBell from "./NotificationBell";
 
 import ChatSystem from './ChatSystem';
 import EvidenceUpload from './EvidenceUpload';
@@ -223,6 +223,8 @@ const RealDashboard = () => {
           </div>
           
           <div className="flex items-center space-x-4">
+            {/* Notification bell */}
+            <NotificationBell />
             <div className="text-right">
               <p className="text-sm text-draco-gold-400">{profile?.nome_completo}</p>
               <p className="text-xs text-draco-gray-300">
