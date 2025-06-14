@@ -20,6 +20,8 @@ export type Database = {
           id: string
           localizacao: string | null
           numero_inquerito: string
+          prioridade: Database["public"]["Enums"]["prioridade_type"] | null
+          status: Database["public"]["Enums"]["status_caso"] | null
           suspeitos: Json | null
           titulo: string
           updated_at: string | null
@@ -34,6 +36,8 @@ export type Database = {
           id?: string
           localizacao?: string | null
           numero_inquerito: string
+          prioridade?: Database["public"]["Enums"]["prioridade_type"] | null
+          status?: Database["public"]["Enums"]["status_caso"] | null
           suspeitos?: Json | null
           titulo: string
           updated_at?: string | null
@@ -48,6 +52,8 @@ export type Database = {
           id?: string
           localizacao?: string | null
           numero_inquerito?: string
+          prioridade?: Database["public"]["Enums"]["prioridade_type"] | null
+          status?: Database["public"]["Enums"]["status_caso"] | null
           suspeitos?: Json | null
           titulo?: string
           updated_at?: string | null
@@ -308,6 +314,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          cargo: Database["public"]["Enums"]["cargo_type"]
           created_at: string | null
           data_ingresso: string | null
           email: string | null
@@ -320,6 +327,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          cargo?: Database["public"]["Enums"]["cargo_type"]
           created_at?: string | null
           data_ingresso?: string | null
           email?: string | null
@@ -332,6 +340,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          cargo?: Database["public"]["Enums"]["cargo_type"]
           created_at?: string | null
           data_ingresso?: string | null
           email?: string | null
